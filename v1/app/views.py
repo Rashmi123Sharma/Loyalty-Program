@@ -59,10 +59,10 @@ class UserProfileView(ViewSet):
             phone_no = request.data.get('phone_no')
             country = request.data.get('country')
 
-            # create the user object
+ 
             user = User.objects.create_user(username=username)
 
-            # create the user profile object and associate it with the user
+       
             user_profile = UserProfileSerializer(
                 user=user,
                 firstname=firstname,
