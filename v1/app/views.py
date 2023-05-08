@@ -15,11 +15,12 @@ class SignUp(ViewSet):
             
             data = {
                 'username': username,
-                 'email':email,
-                 'password':password,
+                'email':email,
+                'password':password,
                  
             }
             print(username,email,password)
+            print(email,password)
             user = User.objects.create_user(**data)
             
             user.save()
@@ -28,12 +29,15 @@ class SignUp(ViewSet):
                 'status': True,
                 'message':'User created!!'
             }
+            print('user created!!')
             return Response(data)
         except Exception as e:
             data={
                 'status':False,
                 'message':'Failed !!'
             }
+            print(email,password)
+            print('failed!!')
             return Response(data)
         
              
@@ -84,3 +88,4 @@ class UserProfileView(ViewSet):
                 'message': 'Failed to create user.'
             }
             return Response(data)
+        
