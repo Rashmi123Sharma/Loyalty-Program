@@ -8,6 +8,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters
 
+from django.db.models import Q
 
 
 
@@ -58,6 +59,28 @@ class UserViewSet(ModelViewSet):
         serializer = userdetailsserializer(details, many=True)
         return Response(serializer.data)
     
+    
+    
+class CashierSearchViewSet(ViewSet):
+    def list(self,request):
+        try:
+            data=request.query_params.get('search')
+            user=UserDetails.objects.filter(Q(phone_no__icontains=data)|Q(phone_no=data))
+            serializer=UserDetailsSerializersNameOnly(user,many=True)
+            data={
+                'status':True,
+                'data':serializer.data,
+                'message':'Successfully get user details'
+            }
+            return Response(data)
+        except Exception as e:
+            data={
+                'status':False,
+                'message':'Failed to get user details',
+                'error':str(e),
+                'line':str(e.__traceback__.tb_lineno)
+            }
+            return Response(data)
 
 class LoyaltyViewSet(ModelViewSet):
     queryset=Loyalty.objects.all()

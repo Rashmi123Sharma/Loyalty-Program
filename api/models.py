@@ -9,7 +9,7 @@ class UserDetails(models.Model):
     firstname=models.CharField(max_length=100,unique=False)
     lastname=models.CharField(max_length=100,unique=False)
     dob=models.DateField()
-    phone_no =models.IntegerField(default=20)
+    phone_no =models.CharField(default=20)
     country=models.CharField(max_length=100,unique=False)
 
 

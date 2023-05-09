@@ -12,6 +12,11 @@ class userdetailsserializer(serializers.ModelSerializer):
     class Meta:
         model=UserDetails
         fields='__all__'
+        
+class UserDetailsSerializersNameOnly(serializers.ModelSerializer):
+    class Meta:
+        model=UserDetails
+        fields=('firstname','lastname')
 
 
 class Loyaltyserializer(serializers.ModelSerializer):
