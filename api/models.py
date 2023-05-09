@@ -9,7 +9,7 @@ class Customer(models.Model):
     firstname=models.CharField(max_length=100,unique=False)
     lastname=models.CharField(max_length=100,unique=False)
     dob=models.DateField()
-    phone_no =models.CharField(default=20)
+    phone_no =models.CharField(default=20,max_length=10)
     country=models.CharField(max_length=100,unique=False)
 
 
@@ -20,12 +20,12 @@ class ImageDatabase(models.Model):
 class Loyalty(models.Model):
     
     enabled=models.BooleanField(default=True)
-    logo_url=models.ForeignKey(ImageDatabase,on_delete=models.DO_NOTHING)
+    logo_url=models.ForeignKey(ImageDatabase,on_delete=models.DO_NOTHING,related_name="logos")
     header=models.CharField(max_length=100)
     subtitle=models.CharField(max_length=100)
     themecolor=models.CharField(max_length=10)
     textcolor=models.CharField(max_length=10)
-    banner_image=models.ForeignKey(ImageDatabase,on_delete=models.DO_NOTHING)
+    banner_image=models.ForeignKey(ImageDatabase,on_delete=models.DO_NOTHING,related_name="banners")
     cashback=models.IntegerField(default=20)
     min_purchase_required=models.BooleanField(default=False)
     min_purchase_amount=models.IntegerField(default=20)
