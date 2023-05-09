@@ -4,4 +4,5 @@ from .views import *
 
 
 router.register('data',UserViewSet,basename='data')
+router.register('loyalty',LoyaltyViewSet,basename='loyalty')
 

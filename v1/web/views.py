@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
-from .serializer import UserSerializer,userdetailsserializer
+from .serializer import UserSerializer,userdetailsserializer,Loyaltyserializer
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import UserDetails
+from api.models import UserDetails,Loyalty
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters
@@ -28,6 +28,24 @@ class UserViewSet(ModelViewSet):
         details=self.filter_queryset(details)
         details=self.paginate_queryset(details)
         serializer = userdetailsserializer(details, many=True)
+        return Response(serializer.data)
+    
+
+class LoyaltyViewSet(ModelViewSet):
+    queryset=Loyalty.objects.all()
+    serializer_class=Loyaltyserializer
+
+    # def create(self, request):
+    #     data=request.data
+    #     serializer = Loyaltyserializer(data=data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def list(self, request):
+        details = Loyalty.objects.all()
+        serializer = Loyaltyserializer(details, many=True,context={'request': request})
         return Response(serializer.data)
     
 
