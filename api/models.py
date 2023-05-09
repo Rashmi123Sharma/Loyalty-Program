@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-class UserDetails(models.Model):
+class Customer(models.Model):
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING)
     username=models.CharField(max_length=100,unique=True)
     firstname=models.CharField(max_length=100,unique=False)
@@ -39,6 +39,10 @@ class Loyalty(models.Model):
     cashback_expiry_enabled=models.BooleanField(default=False)
     expiry_months=models.IntegerField(default=20)
 
+
+
+class UserTransactions(models.Model):
+    user=models.ForeignKey(Customer,on_delete=models.DO_NOTHING)
 
 
 
