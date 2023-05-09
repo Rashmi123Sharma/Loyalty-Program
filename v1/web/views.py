@@ -62,5 +62,11 @@ class UserViewSet(ModelViewSet):
 class LoyaltyViewSet(ModelViewSet):
     queryset=Loyalty.objects.all()
     serializer_class=Loyaltyserializer
+   
+    
+
+
+        
+
 
     
