@@ -15,14 +15,26 @@ class UserDetails(models.Model):
 
 
 class Loyalty(models.Model):
-    logo=models.ImageField(upload_to="")
+    
+    enabled=models.BooleanField(default=True)
+    logo=models.ImageField(upload_to="loyalty_image")
     header=models.CharField(max_length=100)
     subtitle=models.CharField(max_length=100)
-    themecolor=models.CharField(max_length=100)
-    textcolor=models.CharField(max_length=100)
-    banner_image=models.ImageField(upload_to="")
-    expiry=models.IntegerField(default=20)
-    creative=models.TextField(default=True)
+    themecolor=models.CharField(max_length=10)
+    textcolor=models.CharField(max_length=10)
+    banner_image=models.ImageField(upload_to="loyalty_image")
+    cashback=models.IntegerField(default=20)
+    min_purchase_required=models.BooleanField(default=False)
+    min_purchase_amount=models.IntegerField(default=20)
+    terms=models.TextField(default=True)
+    html=models.TextField(default=True)
+    
+    cashback_reminder_enabled=models.BooleanField(default=False)
+    reminder_value=models.IntegerField(default=20)
+    reminder_choice=models.CharField(max_length=10,default='days') #days or weeks
+    remind_only_eligible_customers=models.BooleanField(default=False)
+    cashback_expiry_enabled=models.BooleanField(default=False)
+    expiry_months=models.IntegerField(default=20)
 
 
 

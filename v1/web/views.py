@@ -35,23 +35,4 @@ class LoyaltyViewSet(ModelViewSet):
     queryset=Loyalty.objects.all()
     serializer_class=Loyaltyserializer
 
-    # def create(self, request):
-    #     data=request.data
-    #     serializer = Loyaltyserializer(data=data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def list(self, request):
-        details = Loyalty.objects.all()
-        serializer = Loyaltyserializer(details, many=True,context={'request': request})
-        return Response(serializer.data)
-    
-
-    
-        
-        
-
-
     
