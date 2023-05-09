@@ -149,7 +149,7 @@ class CustomerTransactionsViewSet(ViewSet):
 
             if redeem_points and points_to_redeem > customer_points:
                 return fail_response('','Insufficient points')
-            
+
             if redeem_points:
                 customer_points=customer_points-points_to_redeem
                 CustomerPointsBank.objects.filter(customer=customer_id).update(points=customer_points)
@@ -166,37 +166,31 @@ class CustomerTransactionsViewSet(ViewSet):
             transaction.is_valid(raise_exception=True)
             transaction.save()
             transaction=CustomerTransactions.objects.get(id=transaction.data['id'])
-            
-            
+
+
             if data['add_cashback']=='true':
                 loyalty=Loyalty.objects.filter(id=1).values('cashback','min_purchase_required','min_purchase_amount')
-                if len(loyalty)==0:
-                    pass
-                else:
+                if len(loyalty) != 0:
                     loyalty=loyalty[0]
-                    cashback=loyalty['cashback']
                     min_purchase_required=loyalty['min_purchase_required']
                     min_purchase_amount=loyalty['min_purchase_amount']
-                    if min_purchase_required==True:
-                        if data['amount']>=min_purchase_amount:
-                            cashback_percent=cashback
-                            cahback_points=(data['amount']*cashback_percent)/100
-                            transaction.points_earned=cahback_points
-                            transaction.save()
-                    else:
+                    if (
+                        min_purchase_required == True
+                        and data['amount'] >= min_purchase_amount
+                        or min_purchase_required != True
+                    ):
+                        cashback=loyalty['cashback']
                         cashback_percent=cashback
                         cahback_points=(data['amount']*cashback_percent)/100
                         transaction.points_earned=cahback_points
                         transaction.save()
-            
-            
             data={
                 'status':True,
                 'data':transaction.id,
                 'message':'Successfully created transaction'
             }
             return Response(data)
-                            
+
         except Exception as e:
             return fail_response(e,'Failed to create transaction')
 
