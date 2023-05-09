@@ -24,3 +24,17 @@ class ImageDatabaseserializer(serializers.ModelSerializer):
     class Meta:
         model=ImageDatabase
         fields='__all__'
+        
+
+class CustomerTransactionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=CustomerTransactions
+        fields='__all__'
+        
+        
+        
+        
+class CustomerPointsBankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=CustomerPointsBank
+        fields='__all__'

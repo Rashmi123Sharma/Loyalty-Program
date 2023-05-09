@@ -41,9 +41,24 @@ class Loyalty(models.Model):
 
 
 
-class UserTransactions(models.Model):
-    user=models.ForeignKey(Customer,on_delete=models.DO_NOTHING)
-
+class CustomerTransactions(models.Model):
+    customer=models.ForeignKey(Customer,on_delete=models.DO_NOTHING)
+    amount=models.IntegerField(default=0)
+    add_cashback=models.BooleanField(default=False)
+    points_redeemed=models.IntegerField(default=0)
+    points_earned=models.IntegerField(default=0)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
+    
+    
+    
+class CustomerPointsBank(models.Model):
+    customer=models.ForeignKey(Customer,on_delete=models.DO_NOTHING,unique=True)
+    points=models.IntegerField(default=0)
+    
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
+    
 
 
 
