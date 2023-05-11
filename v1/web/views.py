@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from .serializer import *
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ViewSet,ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from api.models import *
@@ -8,6 +8,12 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters
 from utilities.utility_function import *
 from django.db.models import Q
+from django.shortcuts import render
+from datetime import datetime 
+import base64
+import pyotp 
+import plivo
+
 
 
 
@@ -185,9 +191,66 @@ class CustomerTransactionsViewSet(ViewSet):
 
         except Exception as e:
             return fail_response(e,'Failed to create transaction')
-
-            
-           
         
+
+
+def returnValue(phone):
+    return str(phone) + str(datetime.date(datetime.now())) + "Some Random Secret Key"
+    # return str(phone) + str(datetime.datetime.now()) + "Some Random Secret Key"
+
+
+def send_message(reciever,message):
+    if not reciever:
+        return Response({'message': 'Phone number is missing', 'status': False})
+    reciever=f'+91{reciever}'
+    client = plivo.RestClient('MANJVJZWRKZDHLMDZMOD','MThjNzc3Y2Q2Y2NhOGY1Y2I3ODRhMmI4YTZhY2Yw')
+    client.messages.create(src='+919876910631',dst=reciever,text=message)
+
+
+
+class OTPViewSet(ModelViewSet):
+    queryset=None
+    serializer_class=None
+
+    def list(self,request):
+        try:
+            
+            phone=request.data.get('phone')
+            key = base64.b32encode(returnValue(phone).encode())
+            otp = pyotp.TOTP(key, interval=300)
+            current_otp = otp.now()
+            message = f"Your OTP is {current_otp}"
+            send_message(phone, message)
+            data={
+                'status':True,
+                'message':'Otp sent'
                 
-    
+
+            }
+            return Response(data)
+        except Exception as e:
+            data={
+                'status':False,
+                'message':'Otp sending Failed'
+            }
+            return Response(data)
+
+    def create (self,request):
+        phone=request.data.get('phone')
+        otp=request.data.get('otp')
+        key = base64.b32encode(returnValue(phone).encode())
+        otp_new = pyotp.TOTP(key, interval=300)
+        if(otp==otp_new):
+            data={
+                'message':'OTP verified',
+                'status':True
+            }
+            # user = User.objects.create(phone=phone)
+            # user.save()
+        else:
+            data={
+                'message':'Invalid OTP',
+                'status':False
+
+            }
+        return Response(data)
