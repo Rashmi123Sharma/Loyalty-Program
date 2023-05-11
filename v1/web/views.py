@@ -10,9 +10,11 @@ from utilities.utility_function import *
 from django.db.models import Q
 from django.shortcuts import render
 from datetime import datetime 
+from rest_framework_simplejwt.tokens import AccessToken
 import base64
 import pyotp 
 import plivo
+
 
 
 
@@ -215,6 +217,13 @@ class AutheticationViewSet(ModelViewSet):
     def list(self,request):
         try:
             phone=request.data.get('phone')
+            user=User.objects.filter(username=phone).exists()
+            if user:
+                data={
+                    "status":False,
+                    "message":"Phone number alredy exists"
+                } 
+                return Response(data)
             key = base64.b32encode(returnValue(phone).encode())
             otp = pyotp.TOTP(key, interval=300)
             current_otp = otp.now()
@@ -226,24 +235,44 @@ class AutheticationViewSet(ModelViewSet):
             }
             return Response(data)
         except Exception as e:
-            data={
-                'status':False,
-                'message':'Otp sending Failed'
-            }
-            return Response(data)
+            return fail_response(e,'Otp Sending Failed')
+
 
     def create (self,request):
         phone=request.data.get('phone')
+        # username=request.data.get('username')
+        email=request.data.get('email')
+        password=request.data.get('password')
         otp=request.data.get('otp')
         key = base64.b32encode(returnValue(phone).encode())
         otp_new = pyotp.TOTP(key, interval=300)
-        if(otp==otp_new):
+        otp_new=otp_new.now()
+        # print('Oldotp',otp)
+        # print('new',otp_new)
+        otp_verification=(otp==otp_new)
+        if otp_verification:
+            user=User.objects.create_user(username=phone,email=email,password=password)
+            user.save()
+            user_id=user.id
             data={
-                'message':'OTP verified',
-                'status':True
+                "user":user_id,
+
             }
-            # user = User.objects.create(phone=phone)
-            # user.save()
+            dashboarduser=DashboardUserSerializer(data=data)
+            if dashboarduser.is_valid():
+                dashboarduser.save()
+            else:
+                return Response(dashboarduser.errors)
+            
+            token=AccessToken.for_user(user)
+            token=str(token)
+            data={
+                    'status':True,
+                    'message':'Registration Successfull',
+                    'token':token,
+                }
+            return Response(data)
+       
         else:
             data={
                 'message':'Invalid OTP',
@@ -251,3 +280,15 @@ class AutheticationViewSet(ModelViewSet):
 
             }
         return Response(data)
+
+
+
+
+
+
+
+
+
+
+
+

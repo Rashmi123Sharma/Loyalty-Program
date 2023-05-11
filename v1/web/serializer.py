@@ -38,3 +38,12 @@ class CustomerPointsBankSerializer(serializers.ModelSerializer):
     class Meta:
         model=CustomerPointsBank
         fields='__all__'
+
+
+
+
+
+class DashboardUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DashboardUser
+        fields ="__all__"
