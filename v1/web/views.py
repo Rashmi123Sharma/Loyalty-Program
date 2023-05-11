@@ -17,10 +17,6 @@ import base64
 import pyotp 
 
 
-
-
-
-
 class ImageDatabaseViewSet(ModelViewSet):
     queryset=ImageDatabase.objects.all()
     serializer_class=ImageDatabaseserializer

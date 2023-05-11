@@ -71,6 +71,6 @@ class TemporaryStorage(models.Model):
     phone=models.CharField(max_length=20)
     email=models.CharField(max_length=200)
     password=models.CharField(max_length=50)
-    created_date=models.DateField(auto_now_add=True)
+    created_date=models.DateTimeField(auto_now_add=True)
 
 
