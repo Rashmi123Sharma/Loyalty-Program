@@ -9,11 +9,12 @@ from rest_framework import filters
 from utilities.utility_function import *
 from django.db.models import Q
 from django.shortcuts import render
-from datetime import datetime 
+
 from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.decorators import action
 import base64
 import pyotp 
-import plivo
+
 
 
 
@@ -196,17 +197,7 @@ class CustomerTransactionsViewSet(ViewSet):
         
 
 
-def returnValue(phone):
-    return str(phone) + str(datetime.date(datetime.now())) + "Some Random Secret Key"
-    # return str(phone) + str(datetime.datetime.now()) + "Some Random Secret Key"
 
-
-def send_message(reciever,message):
-    if not reciever:
-        return Response({'message': 'Phone number is missing', 'status': False})
-    reciever=f'+91{reciever}'
-    client = plivo.RestClient('MANJVJZWRKZDHLMDZMOD','MThjNzc3Y2Q2Y2NhOGY1Y2I3ODRhMmI4YTZhY2Yw')
-    client.messages.create(src='+919876910631',dst=reciever,text=message)
 
 
 
@@ -217,6 +208,8 @@ class AutheticationViewSet(ModelViewSet):
     def list(self,request):
         try:
             phone=request.data.get('phone')
+            email=request.data.get('email')
+            password=request.data.get('password')
             user=User.objects.filter(username=phone).exists()
             if user:
                 data={
@@ -224,6 +217,15 @@ class AutheticationViewSet(ModelViewSet):
                     "message":"Phone number alredy exists"
                 } 
                 return Response(data)
+            data={
+                'phone':phone,
+                'email':email,
+                'password':password
+            }
+            serializer=TemporaryStorageSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            id=serializer.data['id']
             key = base64.b32encode(returnValue(phone).encode())
             otp = pyotp.TOTP(key, interval=300)
             current_otp = otp.now()
@@ -231,7 +233,8 @@ class AutheticationViewSet(ModelViewSet):
             send_message(phone, message)
             data={
                 'status':True,
-                'message':'Otp sent'
+                'message':'Otp sent',
+                'id':id
             }
             return Response(data)
         except Exception as e:
@@ -281,7 +284,23 @@ class AutheticationViewSet(ModelViewSet):
             }
         return Response(data)
 
+    @action(detail=True,methods=['get'])
+    def details(self,request,pk):
+        try:
+            data=TemporaryStorage.object.get(id=pk)
+            data={
+                'status':True,
+                'data':{
+                    'phone':data.phone,
+                    'email':data.email,
+                    'password':data.password
+                }
+            }
+            return Response(data)
+        except Exception as e:
+            return fail_response(e,"data not found")
 
+    
 
 
 

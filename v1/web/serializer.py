@@ -47,3 +47,10 @@ class DashboardUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = DashboardUser
         fields ="__all__"
+
+
+
+class TemporaryStorageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TemporaryStorage
+        fields ="__all__"
