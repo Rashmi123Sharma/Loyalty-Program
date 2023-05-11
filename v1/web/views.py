@@ -9,8 +9,9 @@ from rest_framework import filters
 from utilities.utility_function import *
 from django.db.models import Q
 from django.shortcuts import render
-
+from django.utils import timezone
 from rest_framework_simplejwt.tokens import AccessToken
+from datetime import datetime, timedelta
 from rest_framework.decorators import action
 import base64
 import pyotp 
@@ -207,6 +208,10 @@ class AutheticationViewSet(ModelViewSet):
 
     def list(self,request):
         try:
+            today = datetime.now().date()
+            new_date = today - timedelta(days=7)
+            data=TemporaryStorage.object.filter(created_date__lte=new_date)
+            data.delete()
             phone=request.data.get('phone')
             email=request.data.get('email')
             password=request.data.get('password')
