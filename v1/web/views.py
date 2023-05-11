@@ -72,7 +72,7 @@ class CashierSearchViewSet(ViewSet):
 class LoyaltyViewSet(ModelViewSet):
     queryset=Loyalty.objects.all()
     serializer_class=Loyaltyserializer
-    def create (self,request):
+    def create(self,request):
         try:
             if Loyalty.objects.count()==0:
                 data=request.data
@@ -83,7 +83,6 @@ class LoyaltyViewSet(ModelViewSet):
                         'status':True,
                         'message':'Saved Successfully'
                         }
-                return Response(data)
             else:
                 queryset=Loyalty.objects.get(id=1)
                 serializer = Loyaltyserializer(queryset,data=request.data,partial=True)
@@ -93,9 +92,9 @@ class LoyaltyViewSet(ModelViewSet):
                         'status':True,
                         'message':'Updated Successfully'
                         }
-                return Response(data)
+            return Response(data)
         except Exception as e:
-            
+
             data={
                 'status':False,
                 'message':'Failed to save',
@@ -118,13 +117,6 @@ class LoyaltyViewSet(ModelViewSet):
         serializer = Loyaltyserializer(details,context={'request': request})
         return Response(serializer.data)
             
-           
-        
-        
-
-    
-    
-    
 
 class CustomerTransactionsViewSet(ViewSet):
     def create(self, request):

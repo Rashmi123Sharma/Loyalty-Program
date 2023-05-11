@@ -9,7 +9,7 @@ class Customer(models.Model):
     firstname=models.CharField(max_length=100,unique=False)
     lastname=models.CharField(max_length=100,unique=False)
     dob=models.DateField()
-    phone_no =models.CharField(default=20,max_length=10)
+    phone_no=models.CharField(default=20,max_length=10)
     country=models.CharField(max_length=100,unique=False)
 
 
@@ -17,8 +17,9 @@ class Customer(models.Model):
 class ImageDatabase(models.Model):
     image=models.ImageField(upload_to="database_Images")
 
+
+
 class Loyalty(models.Model):
-    
     enabled=models.BooleanField(default=True)
     logo_url=models.ForeignKey(ImageDatabase,on_delete=models.DO_NOTHING,related_name="logos")
     header=models.CharField(max_length=100)
