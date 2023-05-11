@@ -213,12 +213,11 @@ class AutheticationViewSet(ModelViewSet):
             phone=request.data.get('phone')
             email=request.data.get('email')
             password=request.data.get('password')
-            user=User.objects.filter(username=phone).exists()
-            if user:
+            if User.objects.filter(username=phone).exists():
                 data={
                     "status":False,
                     "message":"Phone number alredy exists"
-                } 
+                }
                 return Response(data)
             data={
                 'phone':phone,
