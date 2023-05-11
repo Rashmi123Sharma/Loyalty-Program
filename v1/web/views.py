@@ -248,7 +248,6 @@ class AutheticationViewSet(ModelViewSet):
 
     def create (self,request):
         phone=request.data.get('phone')
-        # username=request.data.get('username')
         email=request.data.get('email')
         password=request.data.get('password')
         otp=request.data.get('otp')

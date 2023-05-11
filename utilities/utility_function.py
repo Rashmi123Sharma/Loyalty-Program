@@ -14,7 +14,7 @@ def fail_response(error,message):
 
 def returnValue(phone):
     return str(phone) + str(datetime.date(datetime.now())) + "Some Random Secret Key"
-    # return str(phone) + str(datetime.datetime.now()) + "Some Random Secret Key"
+   
 
 
 def send_message(reciever,message):
