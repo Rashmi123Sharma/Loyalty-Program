@@ -208,8 +208,10 @@ class AutheticationViewSet(ModelViewSet):
 
     def list(self,request):
         try:
-            today = datetime.now().date()
-            new_date = today - timedelta(days=7)
+            # today = datetime.now().date()
+            # new_date = today - timedelta(days=7)
+            today=timezone.now()
+            new_date=today-timedelta(minutes=600)
             data=TemporaryStorage.object.filter(created_date__lte=new_date)
             data.delete()
             phone=request.data.get('phone')
