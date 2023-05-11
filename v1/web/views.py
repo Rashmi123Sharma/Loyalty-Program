@@ -208,13 +208,12 @@ def send_message(reciever,message):
 
 
 
-class OTPViewSet(ModelViewSet):
+class AutheticationViewSet(ModelViewSet):
     queryset=None
     serializer_class=None
 
     def list(self,request):
         try:
-            
             phone=request.data.get('phone')
             key = base64.b32encode(returnValue(phone).encode())
             otp = pyotp.TOTP(key, interval=300)
@@ -224,8 +223,6 @@ class OTPViewSet(ModelViewSet):
             data={
                 'status':True,
                 'message':'Otp sent'
-                
-
             }
             return Response(data)
         except Exception as e:
