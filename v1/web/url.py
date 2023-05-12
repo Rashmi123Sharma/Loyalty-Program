@@ -8,6 +8,6 @@ router.register('loyalty',LoyaltyViewSet,basename='loyalty')
 router.register('image_database',ImageDatabaseViewSet,basename='ImageDatabase')
 router.register('customer_tansaction',CustomerTransactionsViewSet,basename='Customer Transactions')
 router.register('auth',AutheticationViewSet,basename='authetication')
-router.register()
+router.register('dashboard_user',DashboardUserViewSet,basename='dashboard_user')
 
 
