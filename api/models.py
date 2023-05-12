@@ -65,6 +65,13 @@ class CustomerPointsBank(models.Model):
 class DashboardUser(models.Model):
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING,unique=True)
     brand_name=models.CharField(max_length=200,default="",null=True,blank=True)
+    business_sector=models.CharField(max_length=200,default="",null=True,blank=True)
+    store_categories=models.CharField(max_length=200,default="",null=True,blank=True)
+    number_of_stores=models.CharField(max_length=200,default="",null=True,blank=True)
+    street_address=models.CharField(max_length=200,default="",null=True,blank=True)
+    state=models.CharField(max_length=200,default="",null=True,blank=True)
+    city=models.CharField(max_length=200,default="",null=True,blank=True)
+    pincode=models.CharField(max_length=200,default="",null=True,blank=True)
 
 
 class TemporaryStorage(models.Model):
