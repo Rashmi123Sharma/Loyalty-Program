@@ -297,7 +297,7 @@ class AutheticationViewSet(ModelViewSet):
             return fail_response(e,"data not found")
         
 
-    class DashboardViewSet(ModelViewSet):
+class DashboardViewSet(ModelViewSet):
         queryset=DashboardUser.objects.all()
         serializer_class=DashboardUserSerializer
         
