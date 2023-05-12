@@ -297,24 +297,24 @@ class AutheticationViewSet(ModelViewSet):
             return fail_response(e,"data not found")
         
 
-    class DashboardViewSet(ModelViewSet):
-        queryset=DashboardUser.objects.all()
-        serializer_class=DashboardUserSerializer
-        
-        def post(self,request):
-            try:
-                user_id=request.User.id
-                dashboard = DashboardUser.objects.filter(user=user_id).first()
-                serializer =DashboardUserSerializer(dashboard,data=request.data,partial=True)
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-                data={
-                            'status':True,
-                            'message':'Data Updated'
-                            }
-                return Response(data)
-            except Exception as e:
-                return fail_response(e,"data not found")
+class DashboardViewSet(ModelViewSet):
+    queryset=DashboardUser.objects.all()
+    serializer_class=DashboardUserSerializer
+    
+    def post(self,request):
+        try:
+            user_id=request.User.id
+            dashboard = DashboardUser.objects.filter(user=user_id).first()
+            serializer =DashboardUserSerializer(dashboard,data=request.data,partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            data={
+                        'status':True,
+                        'message':'Data Updated'
+                        }
+            return Response(data)
+        except Exception as e:
+            return fail_response(e,"data not found")
 
       
             
