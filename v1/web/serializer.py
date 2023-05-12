@@ -7,12 +7,12 @@ class UserSerializer(serializers.ModelSerializer):
         model=User
         fields='__all__'
 
+
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model=Customer
         fields='__all__'
         
-
 
 class Loyaltyserializer(serializers.ModelSerializer):
     class Meta:
@@ -30,9 +30,7 @@ class CustomerTransactionsSerializer(serializers.ModelSerializer):
     class Meta:
         model=CustomerTransactions
         fields='__all__'
-        
-        
-        
+
         
 class CustomerPointsBankSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,14 +38,10 @@ class CustomerPointsBankSerializer(serializers.ModelSerializer):
         fields='__all__'
 
 
-
-
-
 class DashboardUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = DashboardUser
         fields ="__all__"
-
 
 
 class TemporaryStorageSerializer(serializers.ModelSerializer):

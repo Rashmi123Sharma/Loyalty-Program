@@ -11,7 +11,7 @@ from django.db.models import Q
 from django.shortcuts import render
 from django.utils import timezone
 from rest_framework_simplejwt.tokens import AccessToken
-from datetime import datetime, timedelta
+from datetime import timedelta
 from rest_framework.decorators import action
 import base64
 import pyotp 
@@ -240,7 +240,6 @@ class AutheticationViewSet(ModelViewSet):
         except Exception as e:
             return fail_response(e,'Otp Sending Failed')
 
-
     def create (self,request):
         phone=request.data.get('phone')
         email=request.data.get('email')
@@ -249,8 +248,6 @@ class AutheticationViewSet(ModelViewSet):
         key = base64.b32encode(returnValue(phone).encode())
         otp_new = pyotp.TOTP(key, interval=300)
         otp_new=otp_new.now()
-        # print('Oldotp',otp)
-        # print('new',otp_new)
         otp_verification=(otp==otp_new)
         if otp_verification:
             user=User.objects.create_user(username=phone,email=email,password=password)
