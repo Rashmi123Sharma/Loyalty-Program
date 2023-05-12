@@ -75,6 +75,7 @@ class DashboardUser(models.Model):
     pincode=models.CharField(max_length=200,default="",null=True,blank=True)
 
 
+
 class TemporaryStorage(models.Model):
     phone=models.CharField(max_length=20)
     full_name=models.CharField(max_length=100)
