@@ -67,7 +67,7 @@ class DashboardUser(models.Model):
     brand_name=models.CharField(max_length=200,default="",null=True,blank=True)
     business_sector=models.CharField(max_length=200,default="",null=True,blank=True)
     store_categories=models.CharField(max_length=200,default="",null=True,blank=True)
-    number_of_stores=models.CharField(max_length=200,default="",null=True,blank=True)
+    number_of_stores=models.IntegerField(default=0)
     street_address=models.CharField(max_length=200,default="",null=True,blank=True)
     state=models.CharField(max_length=200,default="",null=True,blank=True)
     city=models.CharField(max_length=200,default="",null=True,blank=True)
