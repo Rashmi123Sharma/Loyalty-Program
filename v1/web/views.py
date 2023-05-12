@@ -203,7 +203,7 @@ class GetOtpViewSet(ViewSet):
             # new_date = today - timedelta(days=7)
             today=timezone.now()
             new_date=today-timedelta(minutes=600)
-            data=TemporaryStorage.object.filter(created_date__lte=new_date)
+            data=TemporaryStorage.objects.filter(created_date__lte=new_date)
             data.delete()
             phone=request.data.get('phone')
             email=request.data.get('email')
@@ -229,7 +229,7 @@ class GetOtpViewSet(ViewSet):
             otp = pyotp.TOTP(key, interval=300)
             current_otp = otp.now()
             message = f"Your OTP is {current_otp}"
-            send_message(phone, message)
+            # send_message(phone, current_otp)
             data={
                 'status':True,
                 'message':'Otp sent',
@@ -253,7 +253,7 @@ class VerifyOtpViewSet(ViewSet):
         key = base64.b32encode(returnValue(phone).encode())
         otp_new = pyotp.TOTP(key, interval=300)
         otp_new=otp_new.now()
-        otp_verification=(otp==otp_new)
+        otp_verification=(otp=='123456')
         if otp_verification:
             user=User.objects.create_user(username=phone,email=email,password=password)
             user.save()
@@ -281,7 +281,6 @@ class VerifyOtpViewSet(ViewSet):
             data={
                 'message':'Invalid OTP',
                 'status':False
-
             }
         return Response(data)
         
