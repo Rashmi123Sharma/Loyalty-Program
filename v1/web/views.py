@@ -37,7 +37,7 @@ class ImageDatabaseViewSet(ModelViewSet):
 
 
 
-class UserViewSet(ModelViewSet):
+class CustomerViewSet(ModelViewSet):
     queryset=Customer.objects.all()
     serializer_class=CustomerSerializer
     filter_backends = [filters.SearchFilter]
@@ -57,9 +57,7 @@ class UserViewSet(ModelViewSet):
         details = self.paginate_queryset(details)
         serializer = self.get_serializer(details, many=True)
         return Response(serializer.data)
-    
-    
-    
+
 class CashierSearchViewSet(ViewSet):
     def list(self,request):
         try:
