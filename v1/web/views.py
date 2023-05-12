@@ -196,11 +196,8 @@ class CustomerTransactionsViewSet(ViewSet):
 
 
 
-class AutheticationViewSet(ModelViewSet):
-    queryset=None
-    serializer_class=None
-
-    def list(self,request):
+class GetOtpViewSet(ViewSet):
+    def create(self,request):
         try:
             # today = datetime.now().date()
             # new_date = today - timedelta(days=7)
@@ -210,6 +207,7 @@ class AutheticationViewSet(ModelViewSet):
             data.delete()
             phone=request.data.get('phone')
             email=request.data.get('email')
+            full_name=request.data.get('full_name')
             password=request.data.get('password')
             if User.objects.filter(username=phone).exists():
                 data={
@@ -220,6 +218,7 @@ class AutheticationViewSet(ModelViewSet):
             data={
                 'phone':phone,
                 'email':email,
+                'full_name':full_name,
                 'password':password
             }
             serializer=TemporaryStorageSerializer(data=data)
@@ -239,11 +238,17 @@ class AutheticationViewSet(ModelViewSet):
             return Response(data)
         except Exception as e:
             return fail_response(e,'Otp Sending Failed')
+        
 
+class VerifyOtpViewSet(ViewSet):
     def create (self,request):
-        phone=request.data.get('phone')
-        email=request.data.get('email')
-        password=request.data.get('password')
+        detail_id=request.data.get('detail_id')
+        details=TemporaryStorage.objects.get(id=detail_id)
+        details=TemporaryStorageSerializer(details).data
+        phone=details['phone']
+        email=details['email']
+        password=details['password']
+        full_name=details['full_name']
         otp=request.data.get('otp')
         key = base64.b32encode(returnValue(phone).encode())
         otp_new = pyotp.TOTP(key, interval=300)
@@ -255,7 +260,7 @@ class AutheticationViewSet(ModelViewSet):
             user_id=user.id
             data={
                 "user":user_id,
-
+                'full_name':full_name,
             }
             dashboarduser=DashboardUserSerializer(data=data)
             if dashboarduser.is_valid():
@@ -279,22 +284,6 @@ class AutheticationViewSet(ModelViewSet):
 
             }
         return Response(data)
-
-    @action(detail=True,methods=['get'])
-    def details(self,request,pk):
-        try:
-            data=TemporaryStorage.object.get(id=pk)
-            data={
-                'status':True,
-                'data':{
-                    'phone':data.phone,
-                    'email':data.email,
-                    'password':data.password
-                }
-            }
-            return Response(data)
-        except Exception as e:
-            return fail_response(e,"data not found")
         
 
 class DashboardUserViewSet(ModelViewSet):

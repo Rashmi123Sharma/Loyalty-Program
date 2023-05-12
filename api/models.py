@@ -64,6 +64,7 @@ class CustomerPointsBank(models.Model):
 
 class DashboardUser(models.Model):
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING,unique=True)
+    full_name=models.CharField(max_length=100)
     brand_name=models.CharField(max_length=200,default="",null=True,blank=True)
     business_sector=models.CharField(max_length=200,default="",null=True,blank=True)
     store_categories=models.CharField(max_length=200,default="",null=True,blank=True)
@@ -76,6 +77,7 @@ class DashboardUser(models.Model):
 
 class TemporaryStorage(models.Model):
     phone=models.CharField(max_length=20)
+    full_name=models.CharField(max_length=100)
     email=models.CharField(max_length=200)
     password=models.CharField(max_length=50)
     created_date=models.DateTimeField(auto_now_add=True)
