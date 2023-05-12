@@ -309,9 +309,9 @@ class DashboardViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             data={
-                        'status':True,
-                        'message':'Data Updated'
-                        }
+                'status':True,
+                'message':'Data Updated'
+                }
             return Response(data)
         except Exception as e:
             return fail_response(e,"data not found")
