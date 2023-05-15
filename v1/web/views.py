@@ -80,9 +80,9 @@ class LoyaltyViewSet(ModelViewSet):
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
                 data={
-                        'status':True,
-                        'message':'Saved Successfully'
-                        }
+                    'status':True,
+                    'message':'Saved Successfully'
+                    }
             else:
                 queryset=Loyalty.objects.get(id=1)
                 serializer = Loyaltyserializer(queryset,data=request.data,partial=True)
@@ -219,7 +219,11 @@ class GetOtpViewSet(ViewSet):
             key = base64.b32encode(returnValue(phone).encode())
             otp = pyotp.TOTP(key, interval=300)
             current_otp = otp.now()
-            message = f"Your OTP is {current_otp}"
+            message = f'''Hi, {full_name}.
+Welcome to Loyalty Program.
+To complete your registration, use the following OTP.
+{current_otp}
+This OTP is valid for 5 minutes. Please do not share this OTP with anyone.'''
             # send_message(phone, message)
             data={
                 'status':True,
@@ -286,9 +290,9 @@ class DashboardUserViewSet(ModelViewSet):
     queryset=DashboardUser.objects.all()
     serializer_class=DashboardUserSerializer
     
-    def post(self,request):
+    def create(self,request):
         try:
-            user_id=request.User.id
+            user_id=request.user.id
             dashboard = DashboardUser.objects.filter(user=user_id).first()
             serializer =DashboardUserSerializer(dashboard,data=request.data,partial=True)
             serializer.is_valid(raise_exception=True)
