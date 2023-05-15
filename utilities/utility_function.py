@@ -24,14 +24,14 @@ def send_message(reciever,message):
         return Response({'message': 'Phone number is missing', 'status': False})
     reciever=f'+91{reciever}'
     account_sid = 'ACb6f647e699efd57e7d8df24306dd27bd'
-    auth_token = '8eb120abb14f6735ce6e79928655f54a'
+    auth_token = '05c7962924b226fc98a791f99235723e'
 
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
                                 from_='+12707705402',
-                                body =message,
-                                to =reciever
+                                body = message,
+                                to = reciever
                             )
 
 

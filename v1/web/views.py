@@ -220,7 +220,7 @@ class GetOtpViewSet(ViewSet):
             otp = pyotp.TOTP(key, interval=300)
             current_otp = otp.now()
             message = f"Your OTP is {current_otp}"
-            # send_message(phone, current_otp)
+            send_message(phone, message)
             data={
                 'status':True,
                 'message':'Otp sent',
