@@ -220,7 +220,7 @@ class GetOtpViewSet(ViewSet):
             otp = pyotp.TOTP(key, interval=300)
             current_otp = otp.now()
             message = f"Your OTP is {current_otp}"
-            send_message(phone, message)
+            # send_message(phone, message)
             data={
                 'status':True,
                 'message':'Otp sent',
@@ -233,47 +233,53 @@ class GetOtpViewSet(ViewSet):
 
 class VerifyOtpViewSet(ViewSet):
     def create (self,request):
-        detail_id=request.data.get('detail_id')
-        details=TemporaryStorage.objects.get(id=detail_id)
-        details=TemporaryStorageSerializer(details).data
-        phone=details['phone']
-        email=details['email']
-        password=details['password']
-        full_name=details['full_name']
-        otp=request.data.get('otp')
-        key = base64.b32encode(returnValue(phone).encode())
-        otp_new = pyotp.TOTP(key, interval=300)
-        otp_new=otp_new.now()
-        otp_verification=(otp=='123456')
-        if otp_verification:
-            user=User.objects.create_user(username=phone,email=email,password=password)
-            user.save()
-            user_id=user.id
-            data={
-                "user":user_id,
-                'full_name':full_name,
-            }
-            dashboarduser=DashboardUserSerializer(data=data)
-            if dashboarduser.is_valid():
-                dashboarduser.save()
-            else:
-                return Response(dashboarduser.errors)
+        try:
             
-            token=AccessToken.for_user(user)
-            token=str(token)
-            data={
-                    'status':True,
-                    'message':'Registration Successfull',
-                    'token':token,
+            detail_id=request.data.get('detail_id')
+            details=TemporaryStorage.objects.get(id=detail_id)
+            details=TemporaryStorageSerializer(details).data
+            phone=details['phone']
+            print(phone)
+            email=details['email']
+            print(email)
+            password=details['password']
+            full_name=details['full_name']
+            otp=request.data.get('otp')
+            key = base64.b32encode(returnValue(phone).encode())
+            otp_new = pyotp.TOTP(key, interval=300)
+            otp_new=otp_new.now()
+            otp_verification=(otp=='123456')
+            if otp_verification:
+                user=User.objects.create_user(username=phone,email=email,password=password)
+                user.save()
+                user_id=user.id
+                data={
+                    "user":user_id,
+                    'full_name':full_name,
+                }
+                dashboarduser=DashboardUserSerializer(data=data)
+                if dashboarduser.is_valid():
+                    dashboarduser.save()
+                else:
+                    return Response(dashboarduser.errors)
+                
+                token=AccessToken.for_user(user)
+                token=str(token)
+                data={
+                        'status':True,
+                        'message':'Registration Successfull',
+                        'token':token,
+                    }
+                return Response(data)
+        
+            else:
+                data={
+                    'message':'Invalid OTP',
+                    'status':False
                 }
             return Response(data)
-       
-        else:
-            data={
-                'message':'Invalid OTP',
-                'status':False
-            }
-        return Response(data)
+        except Exception as e:
+            return fail_response(e,'Otp Verification Failed')
         
 
 class DashboardUserViewSet(ModelViewSet):
