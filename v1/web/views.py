@@ -74,8 +74,12 @@ class LoyaltyViewSet(ModelViewSet):
     serializer_class=Loyaltyserializer
     def create(self,request):
         try:
-            if Loyalty.objects.count()==0:
-                data=request.data
+            user_id=request.user.id
+            
+            loyalty_exists=Loyalty.objects.filter(created_by=user_id).exists()
+            if not loyalty_exists:
+                data=dict(request.data.items())
+                data['created_by']=user_id
                 serializer = Loyaltyserializer(data=data)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
@@ -84,7 +88,7 @@ class LoyaltyViewSet(ModelViewSet):
                     'message':'Saved Successfully'
                     }
             else:
-                queryset=Loyalty.objects.get(id=1)
+                queryset=Loyalty.objects.get(created_by=user_id)
                 serializer = Loyaltyserializer(queryset,data=request.data,partial=True)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()

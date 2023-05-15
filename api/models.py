@@ -40,6 +40,7 @@ class Loyalty(models.Model):
     remind_only_eligible_customers=models.BooleanField(default=False)
     cashback_expiry_enabled=models.BooleanField(default=False)
     expiry_months=models.IntegerField(default=20)
+    created_by=models.ForeignKey(User,on_delete=models.DO_NOTHING)
 
 
 
