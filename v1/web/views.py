@@ -1,18 +1,16 @@
-from django.contrib.auth.models import User
+from utilities.utility_function import *
 from .serializer import *
+from api.models import *
+from django.contrib.auth.models import User
 from rest_framework.viewsets import ViewSet,ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import *
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters
-from utilities.utility_function import *
 from django.db.models import Q
-from django.shortcuts import render
 from django.utils import timezone
 from rest_framework_simplejwt.tokens import AccessToken
 from datetime import timedelta
-from rest_framework.decorators import action
 import base64
 import pyotp 
 
@@ -34,8 +32,6 @@ class ImageDatabaseViewSet(ModelViewSet):
             return Response(data)
         except Exception as e:
             return fail_response(e,'Failed to create image')
-
-
 
 class CustomerViewSet(ModelViewSet):
     queryset=Customer.objects.all()
@@ -190,11 +186,6 @@ class CustomerTransactionsViewSet(ViewSet):
         except Exception as e:
             return fail_response(e,'Failed to create transaction')
         
-
-
-
-
-
 
 class GetOtpViewSet(ViewSet):
     def create(self,request):
