@@ -290,6 +290,33 @@ class VerifyOtpViewSet(ViewSet):
             return fail_response(e,'Otp Verification Failed')
         
 
+class ResendOtpViewSet(ViewSet):
+    def create(self,request):
+        try:
+            user_id=request.user.id
+            details=TemporaryStorage.objects.get(id=user_id)
+            details=TemporaryStorageSerializer(details).data
+            phone=details['phone']
+            full_name=details['full_name']
+            key = base64.b32encode(returnValue(phone).encode())
+            otp = pyotp.TOTP(key, interval=300)
+            otp=otp.now()
+            message = f'''Hi, {full_name}.
+Welcome back to Loyalty Program.
+Please use the following OTP to complete your registration.
+{otp}
+This OTP is valid for 5 minutes. Please do not share this OTP with anyone.'''
+            # send_message(phone, message)
+            data={
+                'status':True,
+                'message':'Otp resent'
+            }
+            return Response(data)
+        except Exception as e:
+            return fail_response(e, 'Otp Resending Failed')
+
+        
+
 class DashboardUserViewSet(ModelViewSet):
     queryset=DashboardUser.objects.all()
     serializer_class=DashboardUserSerializer
