@@ -243,7 +243,6 @@ This OTP is valid for 5 minutes. Please do not share this OTP with anyone.'''
 class VerifyOtpViewSet(ViewSet):
     def create (self,request):
         try:
-            
             detail_id=request.data.get('detail_id')
             details=TemporaryStorage.objects.get(id=detail_id)
             details=TemporaryStorageSerializer(details).data
@@ -280,7 +279,6 @@ class VerifyOtpViewSet(ViewSet):
                         'token':token,
                     }
                 return Response(data)
-        
             else:
                 data={
                     'message':'Invalid OTP',
@@ -336,6 +334,19 @@ class DashboardUserViewSet(ModelViewSet):
             return Response(data)
         except Exception as e:
             return fail_response(e,"data not found")
+        
+    def list(self,request):
+        try:
+            user_id=request.user.id
+            dashboard = DashboardUser.objects.filter(user=user_id).first()
+            serializer =DashboardUserSerializer(dashboard)
+            data={
+                'status':True,
+                'data':serializer.data
+                }
+            return Response(data)
+        except Exception as e:
+            return fail_response(e,"data not found")
 
       
             
@@ -356,10 +367,10 @@ class TempStorageViewSet(ViewSet):
 
 class LoginViewSet(ViewSet):
     def create(self, request):
-        identity=request.data.get('identity')
+        identity=request.data.get('username')
         password=request.data.get('password')
-        # identity=base64.b64decode(identity).decode('ascii')
-        # password=base64.b64decode(password).decode('ascii')
+        identity=base64.b64decode(identity).decode('ascii')
+        password=base64.b64decode(password).decode('ascii')
         user=User.objects.filter(Q(username=identity) | Q(email=identity)).first() #return boolean
         if user:
             if user.check_password(password):
@@ -375,21 +386,18 @@ class LoginViewSet(ViewSet):
                     'token':token,
                     'user_data':serializers.data
                 }
-                return Response(data)
-                
             else:
                 data={
                     'status':False,
                     'message':'password not valid'
                 }
-                return Response(data)
-                
         else:
             data={
                 'status':False,
                 'message':'user not found'
             }
-            return Response(data)
+
+        return Response(data)
     
 
 
