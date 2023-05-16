@@ -6,6 +6,11 @@ import plivo
 
 
 def fail_response(error,message):
+    if error is None:
+        return Response({
+            'status':False,
+            'message':message,
+        })
     return Response({
         'status':False,
         'message':message,

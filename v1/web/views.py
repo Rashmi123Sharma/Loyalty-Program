@@ -145,7 +145,7 @@ class CustomerTransactionsViewSet(ViewSet):
                 customer_points=customer_points[0]['points']
 
             if redeem_points and points_to_redeem > customer_points:
-                return fail_response('','Insufficient points')
+                return fail_response(None,'Insufficient points')
 
             if redeem_points:
                 customer_points=customer_points-points_to_redeem
