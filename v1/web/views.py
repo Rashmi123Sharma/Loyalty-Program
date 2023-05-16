@@ -15,6 +15,7 @@ import base64
 import pyotp 
 
 
+
 class ImageDatabaseViewSet(ModelViewSet):
     queryset=ImageDatabase.objects.all()
     serializer_class=ImageDatabaseserializer
@@ -353,7 +354,50 @@ class TempStorageViewSet(ViewSet):
             return fail_response(e,"data not found")
 
 
-
+class LoginViewSet(ViewSet):
+    def create(self, request):
+        identity=request.data.get('identity')
+        password=request.data.get('password')
+        username=base64.b64decode(username).decode('ascii')
+        email=base64.b64decode(email).decode('ascii')
+        password=base64.b64decode(password).decode('ascii')
+        user=User.objects.filter(Q(username=identity) | Q(email=identity)).first() #return boolean
+        if user:
+            if user.check_password(password):
+                #password_valid
+                token=AccessToken.for_user(user)
+                token=str(token)
+                dashboard_user = DashboardUser.objects.filter(user=user).first()
+                data={
+                    'status':True,
+                    'message':'login success',
+                    'token':token,
+                    'full_name': dashboard_user.full_name,
+                    'brand_name': dashboard_user.brand_name ,
+                    'business_sector': dashboard_user.business_sector,
+                    'store_categories': dashboard_user.store_categories,
+                    'number_of_stores': dashboard_user.number_of_stores ,
+                    'street_address': dashboard_user.street_address,
+                    'state': dashboard_user.state  ,
+                    'city': dashboard_user.city  ,
+                    'pincode': dashboard_user.pincode ,
+                    'profile_step': dashboard_user.profile_step ,
+                }
+                return Response(data)
+                
+            else:
+                data={
+                    'status':False,
+                    'message':'password not valid'
+                }
+                return Response(data)
+                
+        else:
+            data={
+                'status':False,
+                'message':'user not found'
+            }
+            return Response(data)
     
 
 
