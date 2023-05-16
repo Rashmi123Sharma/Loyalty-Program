@@ -293,8 +293,8 @@ class VerifyOtpViewSet(ViewSet):
 class ResendOtpViewSet(ViewSet):
     def create(self,request):
         try:
-            user_id=request.user.id
-            details=TemporaryStorage.objects.get(id=user_id)
+            detail_id=request.data.get('detail_id')
+            details=TemporaryStorage.objects.get(id=detail_id)
             details=TemporaryStorageSerializer(details).data
             phone=details['phone']
             full_name=details['full_name']
