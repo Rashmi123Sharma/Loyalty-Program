@@ -10,5 +10,5 @@ router.register('customer_tansaction',CustomerTransactionsViewSet,basename='Cust
 router.register('get_otp',GetOtpViewSet,basename='get_otp')
 router.register('verify_otp',VerifyOtpViewSet,basename='verify_otp')
 router.register('dashboard_user',DashboardUserViewSet,basename='dashboard_user')
-
+router.register('temporary_storage',TempStorageViewSet,basename='temp_storage')
 
