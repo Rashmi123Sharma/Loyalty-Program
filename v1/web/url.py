@@ -12,4 +12,6 @@ router.register('verify_otp',VerifyOtpViewSet,basename='verify_otp')
 router.register('resend_otp',ResendOtpViewSet,basename='resend_otp')
 router.register('dashboard_user',DashboardUserViewSet,basename='dashboard_user')
 router.register('temporary_storage',TempStorageViewSet,basename='temp_storage')
+router.register('login',LoginViewSet,basename='login')
+
 
