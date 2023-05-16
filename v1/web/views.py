@@ -309,7 +309,7 @@ This OTP is valid for 5 minutes. Please do not share this OTP with anyone.'''
             # send_message(phone, message)
             data={
                 'status':True,
-                'message':'Otp resent'
+                'message':'We have resent the one time password.'
             }
             return Response(data)
         except Exception as e:
