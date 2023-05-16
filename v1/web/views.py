@@ -93,9 +93,9 @@ class LoyaltyViewSet(ModelViewSet):
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
                 data={
-                        'status':True,
-                        'message':'Updated Successfully'
-                        }
+                    'status':True,
+                    'message':'Updated Successfully'
+                    }
             return Response(data)
         except Exception as e:
 
@@ -104,7 +104,7 @@ class LoyaltyViewSet(ModelViewSet):
                 'message':'Failed to save',
                 'error':str(e),
                 'line':e.__traceback__.tb_lineno
-            }
+                }
             return Response(data)
         
     def list(self, request):
@@ -207,7 +207,7 @@ class GetOtpViewSet(ViewSet):
             if User.objects.filter(username=phone).exists():
                 data={
                     "status":False,
-                    "message":"Phone number alredy exists"
+                    "message":"Phone number already exists"
                 }
                 return Response(data)
             data={
@@ -339,7 +339,18 @@ class DashboardUserViewSet(ModelViewSet):
       
             
 
-
+class TempStorageViewSet(ViewSet):
+    def list(self,request):
+        try:
+            id=request.GET.get('id')
+            data=TemporaryStorage.objects.filter(id=id).values('phone').first()
+            data={
+                'status':True,
+                'phone':data['phone']
+            }
+            return Response(data)
+        except Exception as e:
+            return fail_response(e,"data not found")
 
 
 
