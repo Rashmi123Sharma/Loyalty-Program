@@ -367,16 +367,17 @@ class TempStorageViewSet(ViewSet):
 
 class LoginViewSet(ViewSet):
     def create(self, request):
-        identity=request.data.get('username')
+        identity=request.data.get('identity')
         password=request.data.get('password')
-        identity=base64.b64decode(identity).decode('ascii')
-        password=base64.b64decode(password).decode('ascii')
+        # identity=base64.b64decode(identity).decode('ascii')
+        # password=base64.b64decode(password).decode('ascii')
         user=User.objects.filter(Q(username=identity) | Q(email=identity)).first() #return boolean
         if user:
             if user.check_password(password):
                 #password_valid
                 token=AccessToken.for_user(user)
                 token=str(token)
+                print(token)
                 dashboard_user=DashboardUser.objects.filter(user=user).first()
                 serializers=DashboardUserSerializer(dashboard_user)
 

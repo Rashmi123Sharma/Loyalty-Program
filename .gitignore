@@ -55,3 +55,4 @@ drf_example
 db.sqlite3
 api/migrations/*
 media/
+db.log
