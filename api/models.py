@@ -16,7 +16,8 @@ class Customer(models.Model):
 
 
 class ImageDatabase(models.Model):
-    image=models.ImageField(upload_to="database_Images")
+    image=models.ImageField(upload_to="database_Images",null=True,blank=True)
+    default=models.BooleanField(default=False)
 
 
 

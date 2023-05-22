@@ -54,4 +54,4 @@ drf_example
 
 db.sqlite3
 api/migrations/*
-media/
+media/database_Images/*
