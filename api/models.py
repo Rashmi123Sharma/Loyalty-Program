@@ -23,7 +23,7 @@ class ImageDatabase(models.Model):
 
 class Loyalty(models.Model):
     enabled=models.BooleanField(default=True)
-    logo_url=models.ForeignKey(ImageDatabase,on_delete=models.DO_NOTHING,related_name="logos")
+    logo=models.ForeignKey(ImageDatabase,on_delete=models.DO_NOTHING,related_name="logos")
     header=models.CharField(max_length=100)
     subtitle=models.CharField(max_length=100)
     themecolor=models.CharField(max_length=10)
@@ -32,7 +32,8 @@ class Loyalty(models.Model):
     cashback=models.IntegerField(default=20)
     min_purchase_required=models.BooleanField(default=False)
     min_purchase_amount=models.IntegerField(default=20)
-    terms=models.TextField(default=True)
+    terms=models.TextField(default=True,blank=True,null=True)
+    terms_list=models.TextField(default=True,blank=True,null=True)
     html=models.TextField(default=True)
     
     cashback_reminder_enabled=models.BooleanField(default=False)

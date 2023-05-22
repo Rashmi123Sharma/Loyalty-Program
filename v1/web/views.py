@@ -246,6 +246,7 @@ class GetOtpViewSet(ViewSet):
                 'full_name':full_name,
                 'password':password
             }
+            
             serializer=TemporaryStorageSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
