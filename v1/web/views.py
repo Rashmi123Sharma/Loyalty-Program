@@ -27,12 +27,41 @@ class ImageDatabaseViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             data={
-                'success':True,
-                'data':serializer.data
+                'status':True,
+                'data':serializer.data,
+                'message':'Uploaded successfully'
             }
             return Response(data)
         except Exception as e:
             return fail_response(e,'Failed to create image')
+        
+    def list(self, request, *args, **kwargs):
+        images_count=ImageDatabase.objects.all().count()
+        if images_count<6:
+            image=ImageDatabase.objects.create(image='default_photos/1.jpg',default=True)
+            image.save()
+            image=ImageDatabase.objects.create(image='default_photos/2.jpg',default=True)
+            image.save()
+            image=ImageDatabase.objects.create(image='default_photos/3.jpg',default=True)
+            image.save()
+            image=ImageDatabase.objects.create(image='default_photos/4.jpg',default=True)
+            image.save()
+            image=ImageDatabase.objects.create(image='default_photos/5.jpg',default=True)
+            image.save()
+            image=ImageDatabase.objects.create(image='default_photos/6.jpg',default=True)
+            image.save()
+        
+        
+        images=ImageDatabase.objects.filter(default=True)
+        serializer=ImageDatabaseserializer(images,many=True,context={'request': request})
+        data={
+            'status':True,
+            'data':serializer.data,
+            'message':'Successfully get images'
+        }
+        return Response(data)
+            
+        
 
 class CustomerViewSet(ModelViewSet):
     queryset=Customer.objects.all()
@@ -76,7 +105,6 @@ class LoyaltyViewSet(ModelViewSet):
     def create(self,request):
         try:
             user_id=request.user.id
-            
             loyalty_exists=Loyalty.objects.filter(created_by=user_id).exists()
             if not loyalty_exists:
                 data=dict(request.data.items())
@@ -110,15 +138,16 @@ class LoyaltyViewSet(ModelViewSet):
         
     def list(self, request):
         #check for new loyalty
-        if Loyalty.objects.count()==0:
+        user_id=request.user.id
+        loyalty=Loyalty.objects.filter(created_by=user_id).exists()
+        if loyalty:
             data={
                 'status':True,
                 'loyalty_available':False,
-                'message':'No loyalty points available'
+                'message':'No loyalty available'
             }
             return Response(data)
-        
-        details=Loyalty.objects.get(id=1)
+        details=Loyalty.objects.get(created_by=user_id)
         serializer = Loyaltyserializer(details,context={'request': request})
         return Response(serializer.data)
             
@@ -217,6 +246,7 @@ class GetOtpViewSet(ViewSet):
                 'full_name':full_name,
                 'password':password
             }
+            
             serializer=TemporaryStorageSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -324,7 +354,7 @@ class DashboardUserViewSet(ModelViewSet):
         try:
             user_id=request.user.id
             dashboard = DashboardUser.objects.filter(user=user_id).first()
-            serializer =DashboardUserSerializer(dashboard,data=request.data,partial=True)
+            serializer = DashboardUserSerializer(dashboard,data=request.data,partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             data={
