@@ -23,7 +23,7 @@ class ImageDatabase(models.Model):
 
 class Loyalty(models.Model):
     enabled=models.BooleanField(default=True)
-    logo=models.ForeignKey(ImageDatabase,on_delete=models.DO_NOTHING,related_name="logos")
+    logo=models.ForeignKey(ImageDatabase,on_delete=models.DO_NOTHING,related_name="logos",null=True,blank=True)
     header=models.CharField(max_length=100)
     subtitle=models.CharField(max_length=100)
     themecolor=models.CharField(max_length=10)
