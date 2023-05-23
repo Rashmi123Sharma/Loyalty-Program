@@ -108,6 +108,9 @@ class LoyaltyViewSet(ModelViewSet):
             loyalty_exists=Loyalty.objects.filter(created_by=user_id).exists()
             if not loyalty_exists:
                 data=dict(request.data.items())
+                for key,value in data.items():
+                    if value=='':
+                        data[key]=None
                 data['created_by']=user_id
                 serializer = Loyaltyserializer(data=data)
                 serializer.is_valid(raise_exception=True)
